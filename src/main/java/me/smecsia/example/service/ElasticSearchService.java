@@ -8,7 +8,6 @@ import org.elasticsearch.node.Node;
 
 import java.io.IOException;
 
-import static java.util.UUID.randomUUID;
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 import static org.elasticsearch.node.NodeBuilder.nodeBuilder;
 
@@ -67,7 +66,7 @@ public class ElasticSearchService {
      * Registers the new index for the mongo-elastic river
      */
     protected void indexCollection(String collectionName) throws IOException {
-        getClient().prepareIndex("_river", "mongodb", "_meta")
+        getClient().prepareIndex("_river", collectionName, "_meta")
                 .setSource(jsonBuilder()
                         .startObject()
                             .field("type", "mongodb")
@@ -81,7 +80,7 @@ public class ElasticSearchService {
                                 .endObject()
                             .endObject()
                             .startObject("index")
-                                .field("name", randomUUID().toString().toLowerCase())
+                                .field("name", collectionName.toLowerCase())
                                 .field("type", collectionName)
                                 .field("bulk_size", "1000")
                                 .field("bulk_timeout", "30")
